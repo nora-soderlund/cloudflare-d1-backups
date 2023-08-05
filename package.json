@@ -1,0 +1,15 @@
+{
+    "name": "@nora-soderlund/cloudflare-d1-backups",
+    "main": "build/index.js",
+    "version": "0.9.15",
+    "scripts": {
+        "build": "npx tsc"
+    },
+    "devDependencies": {
+        "@cloudflare/workers-types": "^4.20230518.0",
+        "typescript": "^5.0.4"
+    },
+    "dependencies": {
+        "@nora-soderlund/cloudflare-d1-backups": "^0.9.3"
+    }
+}

@@ -5,6 +5,7 @@ export default class WritableMultipartUpload {
 
     constructor(private readonly multipartUpload: R2MultipartUpload, private readonly maxBodySize: number) {
         this.multipartUpload = multipartUpload;
+        this.maxBodySize = maxBodySize;
     };
 
     async append(command: string) {

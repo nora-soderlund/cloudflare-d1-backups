@@ -40,7 +40,7 @@ export async function createBackup(originDatabase: D1Database, destinationBucket
                     await writableMultipartUpload.append("ANALYZE sqlite_master;");
                 else if(table.name.startsWith("sqlite_"))
                     continue;
-                else if(table.name.startsWith("CREATE VIRTUAL TABLE")) {
+                else if(table.sql.startsWith("CREATE VIRTUAL TABLE")) {
                     if(!writableSchema) {
                         await writableMultipartUpload.append("PRAGMA writable_schema=ON;");
 

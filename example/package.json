@@ -7,7 +7,7 @@
         "wrangler": "^3.1.1"
     },
     "dependencies": {
-        "@nora-soderlund/cloudflare-d1-backups": "^0.9.15"
+        "@nora-soderlund/cloudflare-d1-backups": "^0.9.18"
     },
     "private": true
 }

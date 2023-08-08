@@ -1,7 +1,7 @@
 import { CloudflarePlans } from "./CloudflarePlans";
 
 export type CreateBackupOptions = {
-    fileName?: string;
+    fileName?: string | (() => string);
 
     maxBodySize?: number;
     cloudflarePlan?: CloudflarePlans;

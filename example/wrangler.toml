@@ -4,26 +4,14 @@ compatibility_date = "2023-04-07"
 usage_model = "bundled"
 node_compat = true
 
-[env.production.vars]
-ENVIRONMENT = "production"
+[triggers]
+crons = [ "0 * * * *" ]
 
-[[ env.production.d1_databases ]]
-binding = "DATABASE"
-database_name = "ridetracker"
-database_id = "4cb96598-71ce-47f5-b556-9ef1bfca42a1"
-
-[[ env.production.r2_buckets ]]
-binding = "BUCKET"
-bucket_name = "ridetracker-production"
-
-[env.staging.vars]
-ENVIRONMENT = "staging"
-
-[[ env.staging.d1_databases ]]
+[[ d1_databases ]]
 binding = "DATABASE"
 database_name = "ridetracker-staging"
 database_id = "fc97d7d6-9958-4d2c-81d8-6fb6522cd862"
 
-[[ env.staging.r2_buckets ]]
+[[ r2_buckets ]]
 binding = "BUCKET"
 bucket_name = "ridetracker-staging"

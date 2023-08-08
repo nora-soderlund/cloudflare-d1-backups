@@ -10,7 +10,7 @@ Creating a backup creates a SQL file in the destination R2 bucket.
 - Call `createBackup(D1Database, R2Bucket, CreateBackupOptions | undefined)` from an execution context.
 
 ### CreateBackupOptions
-- `hourFormat`: either `"12 Hour format" (true) | "24 hour format" (false | undefined)`, defaults to `"24 hour format"`.
+- `hourFormat`: either `(true): "09:00:52PM"|(false | undefined): "20:00:52"`, defaults to `(false | undefined): "20:00:52"`.
 - `fileName`: the file name for the SQL file in the R2 bucket, default is `backups/${(new Date()).toUTCString()}.sql`.
 - `cloudflarePlan`: any of `"Free" | "Pro" | "Business" | "Enterprise"`, this sets the respective `maxBodySize`, defaults to `"Free"` (100 MB).
 - `maxBodySize`: the maximum body size for R2 bucket uploads in MB, this depends on your plan, unless you're using Enterprise with a custom size, leave this unset.

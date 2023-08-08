@@ -24,7 +24,13 @@ type SqliteTableInfoRow = {
  */
 export function timeFormat(option: boolean){
     if(option === true){
-        return new Date().toLocaleString('en-US', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true, timeZoneName: 'short' }).replace(/,\s(\w+)\s(\d{2}),\s(\d{4}),\s/, ', $2 $1 $3 ').replace(/:\s/g, ':').replace(/\s(AM|PM)/, '$1');
+                let date = new Date();
+        let time = date.getUTCHours();
+        let amPm = time >= 12 ? 'PM' : 'AM';
+        time = time % 12 || 12;
+        let paddedTime = time < 10 ? '0' + time : time;
+    
+        return date.toUTCString().replace(/\d{2}:\d{2}:\d{2}/, `${paddedTime}:00:00${amPm}`);
     } else {
         return (new Date()).toUTCString();
     }

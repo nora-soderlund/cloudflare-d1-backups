@@ -1,10 +1,20 @@
-import { createBackup } from "@nora-soderlund/cloudflare-d1-backups";
+import { createBackup, CreateBackupOptions } from "@nora-soderlund/cloudflare-d1-backups";
 
 export default {
-    // ideally you'd have it in a CRON, but for the sake of debugging:
-    async fetch(request: Request, env: Env, context: ExecutionContext) {
-        const result = await createBackup(env.DATABASE, env.BUCKET);
+    async fetch(request: Request, env: Env) {
+        const options: CreateBackupOptions = {
+            fileName: `backups/${(new Date()).toUTCString()}.sql`
+        };
 
+        const result = await createBackup(env.DATABASE, env.BUCKET, options);
+
+        return Response.json(result);
+    },
+
+    // or preferably, use a cron trigger defined in your wrangler config or the dashboard
+    async scheduled(request: Request, env: Env) {
+        const result = await createBackup(env.DATABASE, env.BUCKET);
+        
         return Response.json(result);
     }
 };

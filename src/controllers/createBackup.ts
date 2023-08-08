@@ -17,8 +17,28 @@ type SqliteTableInfoRow = {
     pk: number;
 };
 
+/**
+ * Returns a formatted date string based on the current time.
+ * @param option - A boolean value indicating whether to use local time AM/PM (true) or UTC time (false).
+ * @returns A formatted date string.
+ */
+export function timeFormat(option: boolean){
+    if(option === true){
+        return new Date().toLocaleString('en-US', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true, timeZoneName: 'short' }).replace(/,\s(\w+)\s(\d{2}),\s(\d{4}),\s/, ', $2 $1 $3 ').replace(/:\s/g, ':').replace(/\s(AM|PM)/, '$1');
+    } else {
+        return (new Date()).toUTCString();
+    }
+}
 export async function createBackup(originDatabase: D1Database, destinationBucket: R2Bucket, options: CreateBackupOptions = {}) {
-    const name = options.fileName ?? `backups/${(new Date()).toUTCString()}.sql`;
+    const defaultOptions = { hourFormat: false };
+    const mergedOptions = { ...defaultOptions, ...options };
+
+    let date = timeFormat(false);
+    if(mergedOptions.hourFormat){
+        date = timeFormat(true);
+    }
+
+    const name = options.fileName ?? `backups/${date}.sql`;
     const maxBodySize = (options.maxBodySize ?? cloudflarePlanLimits[options.cloudflarePlan ?? "Free"]) * 131072;
 
     const multipartUpload = await destinationBucket.createMultipartUpload(name);

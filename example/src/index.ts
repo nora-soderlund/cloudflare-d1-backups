@@ -1,18 +1,20 @@
-import { createBackup } from "@nora-soderlund/cloudflare-d1-backups";
+import { createBackup, CreateBackupOptions } from "@nora-soderlund/cloudflare-d1-backups";
 
 export default {
-    // only use fetch for debugging:
-    async fetch(request: Request, env: Env, context: ExecutionContext) {
-        const projectName = 'test'; //add your project name here for structure
-        const result = await createBackup(env.DATABASE, env.BUCKET, {fileName :`backups/${projectName}/${(new Date()).toUTCString()}.sql`});
+    async fetch(request: Request, env: Env) {
+        const options: CreateBackupOptions = {
+            fileName: `backups/${(new Date()).toUTCString()}.sql`
+        };
+
+        const result = await createBackup(env.DATABASE, env.BUCKET, options);
 
         return Response.json(result);
-    }
-    async scheduled(request, env, ctx) {
-        // add the CRON job in your workers dashboard panel under the "triggers" tab
-        const projectName = 'test'; //add your project name here for structure
-        const result = await createBackup(env.DATABASE, env.BUCKET, {fileName :`backups/${projectName}/${(new Date()).toUTCString()}.sql`} );
+    },
+
+    // or preferably, use a cron trigger defined in your wrangler config or the dashboard
+    async scheduled(request: Request, env: Env) {
+        const result = await createBackup(env.DATABASE, env.BUCKET);
         
         return Response.json(result);
-  }
+    }
 };

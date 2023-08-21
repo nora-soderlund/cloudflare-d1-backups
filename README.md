@@ -3,6 +3,10 @@ This is a package based heavily on [sqlite-dump for Python by simonw](https://gi
 
 This script has only been tested on a 660kb database, with 634 statements; from an experimental backend *to* an experimental backend.
 
+```cmd
+npm i @nora-soderlund/cloudflare-d1-backups
+```
+
 ## Create a backup
 Creating a backup creates a SQL file in the destination R2 bucket.
 

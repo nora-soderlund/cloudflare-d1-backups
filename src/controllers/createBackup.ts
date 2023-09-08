@@ -49,7 +49,7 @@ export async function createBackup(originDatabase: D1Database, destinationBucket
 
                     const tableName = table.name.replace("'", "''");
 
-                    await writableMultipartUpload.append(`INSERT INTO sqlite_master (type, name, tbl_name, rootpage, sql) VALUES ('table', '${tableName}', '${tableName}', 0, '${table.sql.replace("'", "''")}');`);
+                    await writableMultipartUpload.append(`INSERT INTO sqlite_master (type, name, tbl_name, rootpage, sql) VALUES ('table', '${tableName}', '${tableName}', 0, '${table.sql.replace(/'/g, "''")}');`);
 
                     continue;
                 }

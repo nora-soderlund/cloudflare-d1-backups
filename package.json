@@ -1,10 +1,9 @@
 {
     "name": "@nora-soderlund/cloudflare-d1-backups",
     "main": "build/index.js",
-    "version": "0.9.22",
+    "version": "0.9.23",
     "scripts": {
-        "build": "npx tsc",
-        "prepare": "npm run build"
+        "build": "npx tsc"
     },
     "devDependencies": {
         "@cloudflare/workers-types": "^4.20230518.0",

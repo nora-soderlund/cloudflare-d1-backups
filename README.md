@@ -1,6 +1,8 @@
 # cloudflare-d1-backups
 This is a package based heavily on [sqlite-dump for Python by simonw](https://github.com/simonw/sqlite-dump/blob/main/sqlite_dump/__init__.py) but modified to be suitable for the current state of the open alpha, experimental backend (beta), databases.
 
+See [Cretezy's fork](https://github.com/Cretezy/cloudflare-d1-backup) for a direct D1 HTTP API version.
+
 This script has only been tested on a 660kb database, with 634 statements; from an experimental backend *to* an experimental backend.
 
 ```cmd

@@ -70,30 +70,39 @@ export async function createBackup(originDatabase: D1Database, destinationBucket
                 if(tableRow) {
                     const columnNames = Object.keys(tableRow);
                     
-                    const queries = [];
+                    const tableRowCount = await originDatabase.prepare(`SELECT COUNT(*) AS count FROM "${tableNameIndent}"`).first<number>("count");
 
-                    // D1 said maximum depth is 20, but the limit is seemingly at 9.
-                    for(let index = 0; index < columnNames.length; index += 9) {
-                        const currentColumnNames = columnNames.slice(index, Math.min(index + 9, columnNames.length));
+                    if(tableRowCount === null)
+                        throw new Error("Failed to get table row count from table.");
 
-                        queries.push(`SELECT '${currentColumnNames.map((columnName) => `'||quote("${columnName.replace('"', '""')}")||'`).join(', ')}' AS partialCommand FROM "${tableNameIndent}"`);
-                    }
+                    const limit = options.queryLimit ?? 1000;
 
-                    const results = await originDatabase.batch<{ partialCommand: string; }>(queries.map((query) => originDatabase.prepare(query)));
+                    for(let offset = 0; offset <= tableRowCount; offset += limit) {
+                        const queries = [];
 
-                    if(results.length && results[0].results.length) {
-                        for(let result = 1; result < results.length; result++) {
-                            if(results[result].results.length !== results[0].results.length)
-                                throw new Error("Failed to split expression tree into several queries properly.")
+                        // D1 said maximum depth is 20, but the limit is seemingly at 9.
+                        for(let index = 0; index < columnNames.length; index += 9) {
+                            const currentColumnNames = columnNames.slice(index, Math.min(index + 9, columnNames.length));
+
+                            queries.push(`SELECT '${currentColumnNames.map((columnName) => `'||quote("${columnName.replace('"', '""')}")||'`).join(', ')}' AS partialCommand FROM "${tableNameIndent}" LIMIT ${limit} OFFSET ${offset}`);
                         }
 
-                        for(let row = 0; row < results[0].results.length; row++) {
-                            let columns = [];
-                            
-                            for(let result = 0; result < results.length; result++)
-                                columns.push(results[result].results[row].partialCommand);
+                        const results = await originDatabase.batch<{ partialCommand: string; }>(queries.map((query) => originDatabase.prepare(query)));
 
-                            await writableMultipartUpload.append(`INSERT INTO "${tableNameIndent}" (${columnNames.map((columnName) => `"${columnName}"`).join(', ')}) VALUES (${columns.join(', ')});`);
+                        if(results.length && results[0].results.length) {
+                            for(let result = 1; result < results.length; result++) {
+                                if(results[result].results.length !== results[0].results.length)
+                                    throw new Error("Failed to split expression tree into several queries properly.")
+                            }
+
+                            for(let row = 0; row < results[0].results.length; row++) {
+                                let columns = [];
+                                
+                                for(let result = 0; result < results.length; result++)
+                                    columns.push(results[result].results[row].partialCommand);
+
+                                await writableMultipartUpload.append(`INSERT INTO "${tableNameIndent}" (${columnNames.map((columnName) => `"${columnName}"`).join(', ')}) VALUES (${columns.map((column) => column.replace('\n', '\\n')).join(', ')});`);
+                            }
                         }
                     }
                 }

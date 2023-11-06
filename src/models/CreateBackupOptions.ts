@@ -5,4 +5,6 @@ export type CreateBackupOptions = {
 
     maxBodySize?: number;
     cloudflarePlan?: CloudflarePlans;
+    
+    queryLimit?: number;
 };

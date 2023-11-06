@@ -3,7 +3,8 @@ import { createBackup, CreateBackupOptions } from "@nora-soderlund/cloudflare-d1
 export default {
     async fetch(request: Request, env: Env) {
         const options: CreateBackupOptions = {
-            fileName: `backups/${(new Date()).toUTCString()}.sql`
+            fileName: `backups/${(new Date()).toUTCString()}.sql`,
+            queryLimit: 10
         };
 
         const result = await createBackup(env.DATABASE, env.BUCKET, options);

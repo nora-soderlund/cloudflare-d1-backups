@@ -19,6 +19,7 @@ Creating a backup creates a SQL file in the destination R2 bucket.
 - `fileName`: the file name, or a function that returns a string, for the SQL file in the R2 bucket, default is `backups/${(new Date()).toUTCString()}.sql`.
 - `cloudflarePlan`: any of `"Free" | "Pro" | "Business" | "Enterprise"`, this sets the respective `maxBodySize`, defaults to `"Free"` (100 MB).
 - `maxBodySize`: the maximum body size for R2 bucket uploads in MB, this depends on your plan, unless you're using Enterprise with a custom size, leave this unset.
+- `queryLimit`: the row offset limit for each SELECT query, defaults to 1000. Alter depending on your row size.
 
 ## Restoring a backup
 Assuming you've downloaded the backed up SQL file from your R2 bucket: `npx wrangler d1 execute <database> --file=<backup.sql>`

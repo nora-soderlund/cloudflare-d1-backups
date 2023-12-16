@@ -29,7 +29,7 @@ export async function createBackup(originDatabase: D1Database, destinationBucket
         let writableSchema: boolean = false;
 
         {
-            const tables = await originDatabase.prepare("SELECT name, type, sql FROM sqlite_master WHERE sql IS NOT NULL AND type = 'table' ORDER BY name").all<SqliteTableRow>();
+            const tables = await originDatabase.prepare("SELECT name, type, sql FROM sqlite_master WHERE sql IS NOT NULL AND type = 'table' ORDER BY rootpage DESC").all<SqliteTableRow>();
 
             for(let table of tables.results) {
                 if(table.name.startsWith("_cf_"))

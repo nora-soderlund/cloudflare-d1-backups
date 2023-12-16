@@ -9,9 +9,9 @@ crons = [ "0 * * * *" ]
 
 [[ d1_databases ]]
 binding = "DATABASE"
-database_name = "ridetracker-staging"
-database_id = "fc97d7d6-9958-4d2c-81d8-6fb6522cd862"
+database_name = "cloudflare-d1-backups"
+database_id = "9569a088-ddb7-408b-8ede-a12caafecf09"
 
 [[ r2_buckets ]]
 binding = "BUCKET"
-bucket_name = "ridetracker-staging"
+bucket_name = "cloudflare-d1-backups"

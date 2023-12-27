@@ -20,7 +20,7 @@ type SqliteTableInfoRow = {
 export async function createBackup(originDatabase: D1Database, destinationBucket: R2Bucket, options: CreateBackupOptions = {}) {
     const name = (options.fileName)?((typeof options.fileName === "string")?(options.fileName):(options.fileName())):(`backups/${(new Date()).toUTCString()}.sql`);
     const maxBodySize = (options.maxBodySize ?? cloudflarePlanLimits[options.cloudflarePlan ?? "Free"]) * 131072;
-
+    const excludeTablesData = options.excludeTablesData ?? [];
     const multipartUpload = await destinationBucket.createMultipartUpload(name);
 
     try {
@@ -65,11 +65,15 @@ export async function createBackup(originDatabase: D1Database, destinationBucket
                 //const tableInfo = await originDatabase.prepare(`PRAGMA table_info("${tableNameIndent}")`).all<SqliteTableInfoRow>();
                 //const columnNames = tableInfo.results.map((row) => row.name);
 
+                // Continue if table exists into excludeTablesData array
+                if (excludeTablesData.includes(table.name))
+                    continue;
+
                 const tableRow = await originDatabase.prepare(`SELECT * FROM "${tableNameIndent}" LIMIT 1`).first();
 
                 if(tableRow) {
                     const columnNames = Object.keys(tableRow);
-                    
+
                     const tableRowCount = await originDatabase.prepare(`SELECT COUNT(*) AS count FROM "${tableNameIndent}"`).first<number>("count");
 
                     if(tableRowCount === null)
@@ -97,7 +101,7 @@ export async function createBackup(originDatabase: D1Database, destinationBucket
 
                             for(let row = 0; row < results[0].results.length; row++) {
                                 let columns = [];
-                                
+
                                 for(let result = 0; result < results.length; result++)
                                     columns.push(results[result].results[row].partialCommand);
 
@@ -108,7 +112,7 @@ export async function createBackup(originDatabase: D1Database, destinationBucket
                 }
             }
         }
-        
+
         {
             const schemas = await originDatabase.prepare("SELECT name, type, sql FROM sqlite_master WHERE sql IS NOT NULL AND type IN ('index', 'trigger', 'view')").all<SqliteTableRow>();
 

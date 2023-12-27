@@ -1,7 +1,7 @@
 {
     "name": "@nora-soderlund/cloudflare-d1-backups",
     "main": "build/index.js",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "scripts": {
         "build": "npx tsc"
     },

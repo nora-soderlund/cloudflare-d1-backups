@@ -1,5 +1,5 @@
 export default class WritableMultipartUpload {
-    private commands: string = "";
+    private commands = "";
     
     public uploadedParts: R2UploadedPart[] = [];
 
@@ -9,13 +9,14 @@ export default class WritableMultipartUpload {
     };
 
     async append(command: string) {
-        command += '\n';
-
         this.commands += command;
+        this.commands += '\n';
 
         if(this.commands.length > this.maxBodySize) {
-            const firstSegment = this.commands.substring(0, this.maxBodySize);
-            const secondSegment = this.commands.substring(this.maxBodySize);
+            const encodedCommands = new TextEncoder().encode(this.commands);
+
+            const firstSegment = encodedCommands.slice(0, this.maxBodySize);
+            const secondSegment = new TextDecoder().decode(encodedCommands.slice(this.maxBodySize));
 
             await this.upload(firstSegment);
 
@@ -32,21 +33,20 @@ export default class WritableMultipartUpload {
         if(commandLength) {
             console.debug(`Uploading remaining part ${uploadPart} (size ${commandLength})`);
 
-            return await this.upload(this.commands);
+            return await this.upload(new TextEncoder().encode(this.commands));
         }
         else {
             console.debug(`No remaining part to upload (size ${commandLength})`);
         }
     }
 
-    async upload(command: string) {
+    async upload(command: Uint8Array) {
         if(!command.length)
             return;
 
         const uploadPart = this.uploadedParts.length + 1;
-        const commandLength = command.length;
 
-        console.debug(`Uploading part ${uploadPart} (size ${commandLength})`);
+        console.debug(`Uploading part ${uploadPart} (size ${command.byteLength})`);
 
         this.uploadedParts.push(await this.multipartUpload.uploadPart(uploadPart, command));
     };

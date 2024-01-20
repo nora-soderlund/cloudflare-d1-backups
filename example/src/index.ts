@@ -4,7 +4,7 @@ export default {
     async fetch(request: Request, env: Env) {
         const options: CreateBackupOptions = {
             fileName: `backups/${(new Date()).toUTCString()}.sql`,
-            queryLimit: 1250
+            queryLimit: 500
         };
 
         const result = await createBackup(env.DATABASE, env.BUCKET, options);

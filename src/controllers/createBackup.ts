@@ -1,4 +1,3 @@
-import { cloudflarePlanLimits } from "../models/CloudflarePlanLimits";
 import { CreateBackupOptions } from "../models/CreateBackupOptions";
 import WritableMultipartUpload from "../models/WritableMultipartUpload";
 
@@ -19,7 +18,7 @@ type SqliteTableInfoRow = {
 
 export async function createBackup(originDatabase: D1Database, destinationBucket: R2Bucket, options: CreateBackupOptions = {}) {
     const name = (options.fileName)?((typeof options.fileName === "string")?(options.fileName):(options.fileName())):(`backups/${(new Date()).toUTCString()}.sql`);
-    const maxBodySize = (options.maxBodySize ?? cloudflarePlanLimits[options.cloudflarePlan ?? "Free"]) * 131072;
+    const maxBodySize = (options.maxBodySize ?? 64) * 1_000_000;
     const excludeTablesData = options.excludeTablesData ?? [];
     const multipartUpload = await destinationBucket.createMultipartUpload(name);
 

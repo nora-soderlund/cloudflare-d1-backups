@@ -3,7 +3,7 @@ This is a package based heavily on [sqlite-dump for Python by simonw](https://gi
 
 See [Cretezy's fork](https://github.com/Cretezy/cloudflare-d1-backup) for a direct D1 HTTP API version.
 
-This script has only been tested on a 660kb database, with 634 statements; from an experimental backend *to* an experimental backend.
+This script has been tested on a 27mb+ database.
 
 ```cmd
 npm i @nora-soderlund/cloudflare-d1-backups

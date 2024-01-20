@@ -9,18 +9,37 @@ export default class WritableMultipartUpload {
     };
 
     async append(command: string) {
-        if(this.commands.length + command.length >= this.maxBodySize)
-            await this.upload();
+        command += '\n';
 
-        this.commands += `${command}\n`;
+        this.commands += command;
+
+        if(this.commands.length > this.maxBodySize) {
+            const firstSegment = this.commands.substring(0, this.maxBodySize);
+            const secondSegment = this.commands.substring(this.maxBodySize);
+
+            await this.upload(firstSegment);
+
+            this.commands = secondSegment;
+
+            return;
+        }
     };
 
-    async upload() {
-        if(!this.commands.length)
+    async uploadRemainingPart() {
+        if(this.commands.length) {
+            return await this.upload(this.commands);
+        }
+    }
+
+    async upload(command: string) {
+        if(!command.length)
             return;
 
-        this.uploadedParts.push(await this.multipartUpload.uploadPart(this.uploadedParts.length + 1, this.commands));
+        const uploadPart = this.uploadedParts.length + 1;
+        const commandLength = command.length;
 
-        this.commands = "";
+        console.debug(`Uploading part ${uploadPart} (size ${commandLength})`);
+
+        this.uploadedParts.push(await this.multipartUpload.uploadPart(uploadPart, command));
     };
 };

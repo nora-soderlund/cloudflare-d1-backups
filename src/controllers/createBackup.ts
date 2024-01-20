@@ -125,7 +125,7 @@ export async function createBackup(originDatabase: D1Database, destinationBucket
         if(writableSchema)
             await writableMultipartUpload.append("PRAGMA writable_schema=OFF;");
 
-        await writableMultipartUpload.upload();
+        await writableMultipartUpload.uploadRemainingPart();
 
         await multipartUpload.complete(writableMultipartUpload.uploadedParts);
 

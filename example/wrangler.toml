@@ -15,3 +15,4 @@ database_id = "9569a088-ddb7-408b-8ede-a12caafecf09"
 [[ r2_buckets ]]
 binding = "BUCKET"
 bucket_name = "cloudflare-d1-backups"
+preview_bucket_name = "cloudflare-d1-backups-local"

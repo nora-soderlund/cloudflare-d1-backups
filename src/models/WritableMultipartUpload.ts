@@ -26,8 +26,16 @@ export default class WritableMultipartUpload {
     };
 
     async uploadRemainingPart() {
-        if(this.commands.length) {
+        const uploadPart = this.uploadedParts.length + 1;
+        const commandLength = this.commands.length;
+        
+        if(commandLength) {
+            console.debug(`Uploading remaining part ${uploadPart} (size ${commandLength})`);
+
             return await this.upload(this.commands);
+        }
+        else {
+            console.debug(`No remaining part to upload (size ${commandLength})`);
         }
     }
 

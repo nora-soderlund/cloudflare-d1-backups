@@ -20,6 +20,7 @@ Creating a backup creates a SQL file in the destination R2 bucket.
 - `maxBodySize`: the maximum body size for R2 bucket uploads in MB, this depends on your plan, unless you're using Enterprise with a custom size, leave this unset.
 - `queryLimit`: the row offset limit for each SELECT query, defaults to 1000. Alter depending on your row size.
 - `excludeTablesData`: name of the tables from which you do not want to include data, ['example1'] (Array)
+- `tableNames`: optional array of strings as table names, case sensitive
 
 ## Restoring a backup
 Assuming you've downloaded the backed up SQL file from your R2 bucket: `npx wrangler d1 execute <database> --file=<backup.sql>`

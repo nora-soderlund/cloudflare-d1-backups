@@ -31,6 +31,12 @@ export async function createBackup(originDatabase: D1Database, destinationBucket
             const tables = await originDatabase.prepare("SELECT name, type, sql FROM sqlite_master WHERE sql IS NOT NULL AND type = 'table' ORDER BY rootpage DESC").all<SqliteTableRow>();
 
             for(let table of tables.results) {
+                if(options.tableNames?.length) {
+                    if(!options.tableNames.includes(table.name)) {
+                        continue;
+                    }
+                }
+
                 if(table.name.startsWith("_cf_"))
                     continue; // we're not allowed access to these
                 else if(table.name === "sqlite_sequence")

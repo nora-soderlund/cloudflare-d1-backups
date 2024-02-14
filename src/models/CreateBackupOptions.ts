@@ -6,4 +6,6 @@ export type CreateBackupOptions = {
     queryLimit?: number;
 
     excludeTablesData?: Array<string>;
+
+    tableNames?: string[];
 };

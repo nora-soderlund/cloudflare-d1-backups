@@ -1,3 +1,8 @@
+# Deprecated
+Backups are now supported natively by the D1 HTTP API. Refer to https://github.com/cloudflare/workers-sdk/pull/5425 for an early wrangler version and information on the API endpoint. This package will no longer be maintained by me.
+
+You can continue to use the package but since it has served its purpose, I will no longer continue to maintain it. The package is regardless in a stable state and there's no hurry in migrating to the Cloudflare API.
+
 # cloudflare-d1-backups
 This is a package based heavily on [sqlite-dump for Python by simonw](https://github.com/simonw/sqlite-dump/blob/main/sqlite_dump/__init__.py) but modified to be suitable for the current state of the open alpha, experimental backend (beta), databases.
 
